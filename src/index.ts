@@ -5,7 +5,7 @@ import path from "path";
 import fs from "fs";
 import compression from "compression";
 import helmet from "helmet";
-import { validateConfig, serverConfig } from "./config";
+import { validateConfig, serverConfig, config } from "./config";
 import routes from "./routes";
 
 // Validate configuration
@@ -36,10 +36,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Create required directories
-const requiredDirs = [
-  serverConfig.uploadDir,
-  serverConfig.outputDir,
-];
+const requiredDirs = [serverConfig.uploadDir, serverConfig.outputDir];
 
 requiredDirs.forEach((dir) => {
   if (!fs.existsSync(dir)) {
@@ -151,14 +148,17 @@ process.on("SIGINT", gracefulShutdown);
 
 // Start server
 const server = app.listen(serverConfig.port, () => {
-  console.log("\n🚀 TRANSCRIPT PROCESSOR v1.0.0");
+  console.log("\nTRANSCRIPT PROCESSOR v1.0.0");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log(`📡 Server running on: http://localhost:${serverConfig.port}`);
-  console.log(`📊 Dashboard: http://localhost:${serverConfig.port}`);
-  console.log(`🔧 API endpoints: http://localhost:${serverConfig.port}/api`);
-  console.log(`💾 Output directory: ${path.resolve(serverConfig.outputDir)}`);
-  console.log(`📤 Upload directory: ${path.resolve(serverConfig.uploadDir)}`);
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log(`Server running on: http://localhost:${serverConfig.port}`);
+  console.log(`Dashboard: http://localhost:${serverConfig.port}`);
+  console.log(` API endpoints: http://localhost:${serverConfig.port}/api`);
+  console.log(` Output directory: ${path.resolve(serverConfig.outputDir)}`);
+  console.log(`Upload directory: ${path.resolve(serverConfig.uploadDir)}`);
+  console.log(`Concurrent processing: ${config.concurrent.processing}`);
+  console.log(
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+  );
   console.log("📋 WORKFLOW:");
   console.log("   1. Upload Transcript Files (.txt)");
   console.log("   2. Provide Job Description & Analysis Prompt");
@@ -170,7 +170,9 @@ const server = app.listen(serverConfig.port, () => {
   console.log("   • OpenAI GPT (configurable model)");
   console.log("   • Anthropic Claude (configurable model)");
   console.log("   • Google Gemini (configurable model)");
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+  console.log(
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+  );
 });
 
 // Handle server errors
