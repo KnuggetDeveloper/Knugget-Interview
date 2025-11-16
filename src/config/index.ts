@@ -45,7 +45,7 @@ export interface ServerConfig {
 
 export const config: ProcessingConfig = {
   concurrent: {
-    processing: parseInt(process.env.CONCURRENT_PROCESSING || "10"),
+    processing: parseInt(process.env.CONCURRENT_PROCESSING || "3"),
   },
   timeouts: {
     processing: 120000, // 2 minutes
